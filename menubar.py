@@ -5,6 +5,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QAction, QMessageBox, QDe
 
 from PyQt5.QtGui import QIcon, QPixmap
 
+from actualizacion import VentanaActualizacion
+from registro import VentanaRegistro
+from campovaldes import VentanaCampo
+from datacomunnity import VentanaDataComunnity
 
 class Ventana(QMainWindow):
     def __init__(self):
@@ -161,17 +165,13 @@ class Ventana(QMainWindow):
         QMessageBox.information(self, "Grupos", "Accion Grupos", QMessageBox.Discard)
 
     def menu_docentes_buscar(self):
-        self.hide()
-        self.ventana1 = Ventana1(self)
-        self.ventana1.show()
+        pass
 
     def menu_psicologo_grupos(self):
         QMessageBox.information(self, "Grupos", "Accion Grupos", QMessageBox.Discard)
 
     def menu_psicologo_buscar(self):
-        self.hide()
-        self.ventanapsico = VentanaPsico2_1(self)
-        self.ventanapsico.show()
+       pass
 
 
 if __name__ == '__main__':
