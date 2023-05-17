@@ -1,20 +1,20 @@
 import sys
 
-from PyQt5.QtGui import QPixmap, QFont
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QHBoxLayout, QFormLayout, QApplication, QLineEdit, \
-    QPushButton, QVBoxLayout, QDialog, QDialogButtonBox, QComboBox
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDate
+from PyQt5.QtGui import QFontDatabase, QFont, QIcon, QPixmap
+from PyQt5.QtWidgets import QWidget, QApplication, QDesktopWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, \
+    QComboBox, QDialog, QDialogButtonBox, QMainWindow, QFormLayout, QHBoxLayout
 import re
 
 
-class VentanaAcudiente(QMainWindow):
+class Ventana_Docente(QMainWindow):
     def __init__(self, anterior=None):
-        super(VentanaAcudiente, self).__init__()
+        super(Ventana_Docente, self).__init__()
 
         self.ventanaAnterior = anterior
 
-        self.setWindowTitle("Formulario de Registro-- Padre")
+        self.setWindowTitle("Formulario de Registro-- Docente")
 
         # Poner el icono:
         self.setWindowIcon(QtGui.QIcon("imagenes/datacomunnity.jpg"))
@@ -236,18 +236,19 @@ class VentanaAcudiente(QMainWindow):
         # --- 1
 
         # Hacemos el campo para ingresar la pregunta1:
-        self.contacto = QLineEdit()
-        self.contacto.setFixedWidth(320)
+        self.pin = QLineEdit()
+        self.pin.setFixedWidth(320)
 
         # Agregamos estos en el formulario:
-        self.ladoDerecho.addRow("Contacto",self.contacto)
+        self.ladoDerecho.addRow("Pin",self.pin)
 
         # Hacemos el campo para ingresar la respuesta1:
-        self.direccion = QLineEdit()
-        self.direccion.setFixedWidth(320)
+        self.materia = QComboBox()
+        self.materia.addItems(["", "Matemáticas", "Español", "Educación Física", "Religión", "Ciencias Naturales", "Sociales", "Artística", "Inglés", "Ética", "Tecnología"])
+        self.materia.setFixedWidth(320)
 
         # Agregamos estos en el formulario:
-        self.ladoDerecho.addRow("Dirección", self.direccion)
+        self.ladoDerecho.addRow("Materia", self.materia)
 
         # --- 2
 
@@ -262,7 +263,7 @@ class VentanaAcudiente(QMainWindow):
 
         # Hacemos el campo para ingresar la pregunta1:
         self.cargo = QComboBox()
-        self.cargo.addItems(["", "Acudiente"])
+        self.cargo.addItems(["", "Docente"])
         self.cargo.setFixedWidth(320)
 
         # Agregamos estos en el formulario:
@@ -328,8 +329,7 @@ class VentanaAcudiente(QMainWindow):
                 or self.password1.text() == ''
                 or self.documento.text() == ''
                 or self.correo.text() == ''
-                or self.contacto.text() == ''
-                or self.direccion.text() == ''
+                or self.pin.text() == ''
 
 
         ):
@@ -376,24 +376,23 @@ class VentanaAcudiente(QMainWindow):
                 self.mensaje.setText("Seleccione un género válido")
                 self.ventanaDialogo.exec_()
 
-            cargo_valido = ["Acudiente"]
+            cargo_valido = ["Docente"]
             if self.cargo.currentText() not in cargo_valido:
                 self.datosCorrectos = False
-                self.mensaje.setText("Seleccione una opción válido")
+                self.mensaje.setText("Seleccione una cargo válido")
                 self.ventanaDialogo.exec_()
 
-            # Validar el número de celular
-            contacto_valido = re.match(r'^\d{10}$', self.contacto.text())
-            if not contacto_valido:
+            # Validar longitud del PIN
+            if len(self.pin.text()) > 5:
                 self.datosCorrectos = False
-                self.mensaje.setText("Ingrese un número de celular válido (10 dígitos)")
+                self.mensaje.setText("El PIN no debe ser mayor a 5 dígitos")
                 self.ventanaDialogo.exec_()
 
         # Si los datos están correctos:
         if self.datosCorrectos:
 
             # Abrimos el archivo en modo agregar escribiendo datos en binario.
-            self.file = open('datos/acudientes.txt', 'ab')
+            self.file = open('datos/docentes.txt', 'ab')
 
             # traer el texto de los QLineEdit() y los agrega concatenandolos.
             # para escribirlos en el archivo en formato binario utf-8
@@ -403,14 +402,13 @@ class VentanaAcudiente(QMainWindow):
                 + self.password1.text() + ";"
                 + self.documento.text() + ";"
                 + self.correo.text() + ";"
-                + self.contacto.text() + ";"
-                + self.direccion.text() + ";"
+                + self.pin.text() + ";"
                 + self.genero.currentText() + ";"
-                + self.cargo.currentText() + "\n"
+                + self.cargo.currentText() + "\n"  # Agregar grado seleccionado
                 , encoding='UTF-8'))
             self.file.close()
 
-            self.file = open('datos/acudientes.txt', 'rb')
+            self.file = open('datos/docentes.txt', 'rb')
             while self.file:
                 linea = self.file.readline().decode('UTF-8')
                 print(linea)
@@ -426,18 +424,16 @@ class VentanaAcudiente(QMainWindow):
         self.password2.setText('')
         self.documento.setText('')
         self.correo.setText('')
-        self.contacto.setText('')
-        self.direccion.setText('')
+        self.pin.setText('')
 
     def accion_botonRegresar(self):
         # ocultamos la ventana actual
         self.hide()
-        # mostramos la ventana nueva
         self.ventanaAnterior.show()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    acudiente = VentanaAcudiente()
-    acudiente.show()
+    docente = Ventana_Docente()
+    docente.show()
     sys.exit(app.exec_())
