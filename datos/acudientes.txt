@@ -2,3 +2,4 @@ Monica;monir;1980;1003256987;monika@gmail.com;3044463002;Aranjuez;Femenino;Acudi
 Carlos Perez;perezC;1478;1002563498;Carlitozzz@gmail.com;3044463002;Belén;Masculino;Acudiente
 Gustavo;Gusto1;1232;1004563298;gustoelchef@gmail.com;3044463002;Poblado;Masculino;Acudiente
 Nuria;nuri21;3696;1005236987;nuriceve@gmail.com;3044463002;Caldas;Femenino;Acudiente
+Juan Mesa;mesa12;123456;1003254789;mesajuan@gmail.com;3226505292;Estrella;Masculino;Acudiente

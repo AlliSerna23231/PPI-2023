@@ -1,0 +1,4 @@
+Camilo;Vasquez;1023629824;9/04/2015;Masculino;2°1
+Sofia;Luna;1023629824;10/05/2014;Masculino;2°1
+Hellen ;Jimenez;1003659874;11/02/2015;Femenino;2°1
+Emely;Palacios;1003739874;5/10/2015;Femenino;2°1

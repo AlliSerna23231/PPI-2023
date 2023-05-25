@@ -1,3 +1,1 @@
-a;a;1023654789;Masculino;Español;3044463002
-a;a;1234567890;123;Masculino;Matemáticas;3044463002
-a;a;122;1003654789;a;25478;Masculino;Docente
+

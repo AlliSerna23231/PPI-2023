@@ -1,132 +1,198 @@
 import sys
 
+from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QHBoxLayout, QFormLayout, QApplication, QLineEdit, \
+    QPushButton, QVBoxLayout, QDialog, QDialogButtonBox, QComboBox, QDateEdit
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QDate
-from PyQt5.QtGui import QFontDatabase, QFont, QIcon
-from PyQt5.QtWidgets import QWidget, QApplication, QDesktopWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, \
-    QComboBox, QDialogButtonBox, QDialog, QDateEdit
-
-from acudiente import VentanaAcudiente
+import re
 
 
-class VentanaRegistro(QWidget):
+class VentanaRegistro(QMainWindow):
     def __init__(self, anterior=None):
-        super().__init__()
+        super(VentanaRegistro, self).__init__()
 
         self.ventanaAnterior = anterior
 
         self.setWindowTitle("Registrar Estudiante")
 
-        self.ancho = 800
+        # Poner el icono:
+        self.setWindowIcon(QtGui.QIcon("imagenes/datacomunnity.jpg"))
+
+        self.ancho = 600
         self.alto = 600
 
-        self.resize(self.ancho, self.alto)
+        self.setFixedSize(self.ancho, self.alto)
 
+        # ventana en el centro
         self.pantalla = self.frameGeometry()
         self.centro = QDesktopWidget().availableGeometry().center()
         self.pantalla.moveCenter(self.centro)
         self.move(self.pantalla.topLeft())
 
-        self.setFixedSize(self.ancho, self.alto)
+        # para que la ventana no se pueda cambiar de tamaño
+        # se fija el ancho y alto
+        self.setFixedWidth(self.ancho)
+        self.setFixedHeight(self.alto)
 
-        # cargar la imagen del icono
-        icono = QIcon('imagenes/datacomunnity.jpg')
+        # establecemos el fondo principal
+        self.fondo = QLabel(self)
 
-        # establecer el icono de la ventana
-        self.setWindowIcon(icono)
+        # definimos la imagen
+        self.imagenFondo = QPixmap('imagenes/paisaje.jpg')
 
-        self.vertical = QVBoxLayout()
-        self.setLayout(self.vertical)
+        # asignamos la imagen
+        self.fondo.setPixmap(self.imagenFondo)
 
-        # cargar la fuente en la aplicación
-        QFontDatabase.addApplicationFont("fonts/Billy Ohio.otf")
+        # establecer el modo para escalar la imagen
+        self.fondo.setScaledContents(True)
 
-        self.letra1 = QFont()
-        self.letra1.setFamily("Billy Ohio")
-        self.letra1.setPointSize(12)
+        # el tamaño de la imagen se adapta al tamaño de su contenedor
+        self.resize(self.imagenFondo.width(), self.imagenFondo.height())
 
+        # establecemos la ventana fondo como la ventana central
+        self.setCentralWidget(self.fondo)
+
+        # Establecemos la distribuccion de los elementos en Layout horizontal
+        self.horizontal = QHBoxLayout()
+        # Le ponemos las margenes:
+        self.horizontal.setContentsMargins(30, 30, 30, 30)
+
+        # *****************Layout IZQUIERDO******************
+
+        # creamos el layout del lado izquierdo:
+        self.ladoIzquierdo = QFormLayout()
+
+        # Hacemos el letrero
         self.letrero1 = QLabel()
-        self.letrero1.setText("Formulario del Estudiante")
-        self.letrero1.setFont(self.letra1)
-        self.letrero1.setAlignment(Qt.AlignCenter)
-        self.letrero1.setStyleSheet("background-color: #215636; color: #FFFFFF; padding: 5px;")
-        self.vertical.addWidget(self.letrero1)
-        self.vertical.addStretch()
 
-        # Agregar widgets para ingresar información del estudiante
+        # Le escribimos el texto:
+        self.letrero1.setText("Información del Usuario")
+
+        # Le asignamos el tipo de letra
+        self.letrero1.setFont(QFont("Andalem Mono", 20))
+
+        # Le ponemos el color del texto:
+        self.letrero1.setStyleSheet("color: #215636;")
+
+        # Agregamos el letrero en la primera fila:
+        self.ladoIzquierdo.addRow(self.letrero1)
+
+        # Agregamos el layout ladoIzquierdo al layout horizontal:
+        self.horizontal.addLayout(self.ladoIzquierdo)
+
+        # Hacemos el letrero:
+        self.letrero2 = QLabel()
+
+        # Establecemos el ancho del label:
+        self.letrero2.setFixedWidth(340)
+
+        # Les escribimos el e¿texto
+        self.letrero2.setText("Por favor ingrese la información del cliente"
+                              "\nen el formulario de abajo. Los campos marcados"
+                              "\ncon asterisco son obligatorios.")
+
+        # Le asignamos el tipo de letra
+        self.letrero2.setFont(QFont("Andalem Mono", 10))
+
+        # Le ponemos el color del texto y margenes:
+        self.letrero2.setStyleSheet("color: #215636; margin-bottom: 40px;"
+                                    "margin-top: 20px;"
+                                    "padding-bottom: 10px;"
+                                    "border: 2px solid #215636;"
+                                    "border-left: none;"
+                                    "border-right: none;"
+                                    "border-top: none;")
+
+        # Agregamos el letrero en la fila siguiente:
+        self.ladoIzquierdo.addRow(self.letrero2)
+
+        # Hacemos el campo para ingresar el nombre
         self.nombre = QLineEdit()
-        self.apellido = QLineEdit()
-        self.documento = QLineEdit()
-        self.fnacimiento = QDateEdit()
-        self.Genero = QComboBox()
-        self.Genero.addItems(["", "Masculino", "Femenino", "Otros"])
-        self.grado = QComboBox()
-        self.grado.addItems(["", "2°1", "2°2", "2°3"])
+        self.nombre.setFixedWidth(250)
 
-        # establecemos el tamaño de los campos
-        campo_fijo = 575
-        altura_fija = 25
-        self.nombre.setFixedSize(campo_fijo, altura_fija)
-        self.apellido.setFixedSize(campo_fijo, altura_fija)
-        self.documento.setFixedSize(campo_fijo, altura_fija)
-        self.fnacimiento.setFixedSize(campo_fijo, altura_fija)
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Nombre*", self.nombre)
+
+        # Hacemos el campo para ingresar el apellido
+        self.apellido = QLineEdit()
+        self.apellido.setFixedWidth(250)
+
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Apellido*", self.apellido)
+
+        # Hacemos el campo para agregar el documento:
+        self.documento = QLineEdit()
+        self.documento.setFixedWidth(250)
+
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Documento*", self.documento)
+
+        # Hacemos el campo para ingresar la fecha de nacimiento:
+        self.fnacimiento = QDateEdit()
         self.fnacimiento.setMaximumDate(QDate.currentDate())  # Limitar fecha máxima a la fecha actual
         self.fnacimiento.setCalendarPopup(True)  # Mostrar un calendario emergente para seleccionar fecha
-        self.Genero.setFixedSize(campo_fijo, altura_fija)
-        self.grado.setFixedSize(campo_fijo, altura_fija)
+        self.fnacimiento.setFixedWidth(250)
 
-        self.vertical.addWidget(QLabel("*Nombre:"))
-        self.vertical.addWidget(self.nombre)
-        self.vertical.addStretch()
-        self.vertical.addWidget(QLabel("*Apellido:"))
-        self.vertical.addWidget(self.apellido)
-        self.vertical.addStretch()
-        self.vertical.addWidget(QLabel("*Número de identificación:"))
-        self.vertical.addWidget(self.documento)
-        self.vertical.addStretch()
-        self.vertical.addWidget(QLabel("*Fecha de nacimiento:"))
-        self.vertical.addWidget(self.fnacimiento)
-        self.vertical.addStretch()
-        self.vertical.addWidget(QLabel("*Género:"))
-        self.vertical.addWidget(self.Genero)
-        self.vertical.addStretch()
-        self.vertical.addWidget(QLabel("*Grado:"))
-        self.vertical.addWidget(self.grado)
-        self.vertical.addStretch()
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Fecha de nacimiento*", self.fnacimiento)
 
-        # Agregar botones para guardar y modificar
-        self.botonGuardar = QPushButton("Guardar")
-        self.botonGuardar.setFixedWidth(150)
-        self.botonGuardar.setStyleSheet("background-color: #2AD241; color: #1E1E1E; padding: 5px;")
+        # Hacemos el campo para ingresar la genero:
+        self.Genero = QComboBox()
+        self.Genero.addItems(["", "Masculino", "Femenino", "Otros"])
+        self.Genero.setFixedWidth(250)
+
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Género", self.Genero)
+
+        # Hacemos el campo para ingresar la grado:
+        self.grado = QComboBox()
+        self.grado.addItems(["", "2°1", "2°2", "2°3"])
+        self.grado.setFixedWidth(250)
+
+        # Agregamos estos en el formulario:
+        self.ladoIzquierdo.addRow("Grado*", self.grado)
+
+        # Hacemos el botón para registrar los datos:
+        self.botonGuardar = QPushButton("Registrar")
+        self.botonGuardar.setFixedWidth(90)
+        self.botonGuardar.setStyleSheet("background-color: #215636;"
+                                          "color: #FFFFFF;"
+                                          "padding: 10px;"
+                                          "margin-top: 40px;")
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
-        self.vertical.addWidget(self.botonGuardar)
 
-        self.botonModificar = QPushButton("Modificar")
-        self.botonModificar.setFixedWidth(150)
-        self.botonModificar.setStyleSheet("background-color: #2AD241; color: #1E1E1E; padding: 5px;")
-        self.botonModificar.clicked.connect(self.accion_botonModificar)
-        self.vertical.addWidget(self.botonModificar)
-
-        # Agregar botones para que nos lleve al formulario del acudiente
-        self.botonAcudiente = QPushButton("Acudiente")
-        self.botonAcudiente.setFixedWidth(150)
-        self.botonAcudiente.setStyleSheet("background-color: #00E420; color: #1E1E1E; padding: 5px;")
-        self.botonAcudiente.clicked.connect(self.accion_botonAcudiente)
-        self.vertical.addWidget(self.botonAcudiente)
-
-        # Agregar botones para que limpie los campos
+        # Hacemos el botón para limpiar los datos:
         self.botonLimpiar = QPushButton("Limpiar")
-        self.botonLimpiar.setFixedWidth(150)
-        self.botonLimpiar.setStyleSheet("background-color: #FF4500; color: #1E1E1E; padding: 5px;")
+        self.botonLimpiar.setFixedWidth(90)
+        self.botonLimpiar.setStyleSheet("background-color: #215636;"
+                                          "color: #FFFFFF;"
+                                          "padding: 10px;"
+                                          "margin-top: 40px;")
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
-        self.vertical.addWidget(self.botonLimpiar)
 
+        # Hacemos el botón para regresar:
         self.botonRegresar = QPushButton("Regresar")
-        self.botonRegresar.setFixedWidth(150)
-        self.botonRegresar.setStyleSheet("background-color: #AAAAAA; color: #1E1E1E; padding: 5px;")
-        self.vertical.addWidget(self.botonRegresar)
+        self.botonRegresar.setFixedWidth(90)
+        self.botonRegresar.setStyleSheet("background-color: #215636;"
+                                        "color: #FFFFFF;"
+                                        "padding: 10px;"
+                                        "margin-top: 40px;")
         self.botonRegresar.clicked.connect(self.accion_botonRegresar)
-        self.vertical.addStretch()
+
+
+
+        # Agregamos los botones al Layout ladoIzquierdo:
+        self.ladoIzquierdo.addRow(self.botonGuardar, self.botonLimpiar)
+        self.ladoIzquierdo.addRow(self.botonRegresar)
+
+        # Agregamos el layout ladoIzquierdo al layout horizontal:
+        self.horizontal.addLayout(self.ladoIzquierdo)
+        # ---------------OJO IMPORTANTE PONER AL FINAL-----------
+        # Indicamos que el layout principal del fondo es horizontal:
+
+
+        self.fondo.setLayout(self.horizontal)
 
         # -----------Construccion de la ventana emergente----------------
 
@@ -167,8 +233,6 @@ class VentanaRegistro(QWidget):
 
         # Establecemos el layout para la ventana de dialogo:
         self.ventanaDialogo.setLayout(self.vertical)
-
-
 
     def accion_botonGuardar(self):
 
@@ -264,20 +328,18 @@ class VentanaRegistro(QWidget):
                     break
             self.file.close()
 
-
-
     def accion_botonModificar(self):
         pass
+
     def accion_botonLimpiar(self):
 
         self.nombre.setText('')
         self.apellido.setText('')
         self.documento.setText('')
 
-
     def accion_botonAcudiente(self):
         self.hide()
-        self.acudiente = VentanaAcudiente(self)
+        self.acudiente = VentanaRegistro(self)
         self.acudiente.show()
 
     def accion_botonRegresar(self):
@@ -287,6 +349,6 @@ class VentanaRegistro(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    registro = VentanaRegistro()
-    registro.show()
+    acudiente = VentanaRegistro()
+    acudiente.show()
     sys.exit(app.exec_())

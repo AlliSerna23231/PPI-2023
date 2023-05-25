@@ -242,7 +242,7 @@ class Ventana_Docente(QMainWindow):
         # Agregamos estos en el formulario:
         self.ladoDerecho.addRow("Pin",self.pin)
 
-        # Hacemos el campo para ingresar la respuesta1:
+        # Hacemos el campo para ingresar la materia:
         self.materia = QComboBox()
         self.materia.addItems(["", "Matemáticas", "Español", "Educación Física", "Religión", "Ciencias Naturales", "Sociales", "Artística", "Inglés", "Ética", "Tecnología"])
         self.materia.setFixedWidth(320)

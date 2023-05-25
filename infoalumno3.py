@@ -5,14 +5,13 @@ from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QApplication, QLabel, Q
     QTableWidgetItem, QPushButton
 from PyQt5 import QtGui
 
-from clientes import Cliente
+from clientes2 import Cliente2
 
 
-class Info_padre3(QMainWindow):
+class Info_alumno3(QMainWindow):
     def __init__(self, anterior):
-        super(Info_padre3, self).__init__(anterior)
+        super(Info_alumno3, self).__init__(anterior)
 
-        self.ventanaAnterior = anterior
 
         self.setWindowTitle("Usuarios Registrados")
         # Poner el icono:
@@ -54,7 +53,7 @@ class Info_padre3(QMainWindow):
         self.setCentralWidget(self.fondo)
 
         # Abrimos el archivo en modo de lectura:
-        self.file = open('datos/acudientes.txt', 'rb')
+        self.file = open('datos/estudiantes.txt', 'rb')
 
         # lista vacia para guardar los usuarios:
         self.usuarios = []
@@ -67,16 +66,13 @@ class Info_padre3(QMainWindow):
             if linea == '':
                 break
             # creamos un objeto tipo cliente llamado u
-            u = Cliente(
+            u = Cliente2(
                 lista[0],
                 lista[1],
                 lista[2],
                 lista[3],
                 lista[4],
                 lista[5],
-                lista[6],
-                lista[7],
-                lista[8],
             )
             # metemos el objeto en la lista de usuarios:
             self.usuarios.append(u)
@@ -117,7 +113,7 @@ class Info_padre3(QMainWindow):
         # creamos una tabla:
         self.tabla = QTableWidget()
 
-        self.tabla.setColumnCount(8)
+        self.tabla.setColumnCount(5)
 
         self.tabla.setColumnWidth(0, 150)
         self.tabla.setColumnWidth(1, 150)
@@ -125,33 +121,23 @@ class Info_padre3(QMainWindow):
         self.tabla.setColumnWidth(3, 150)
         self.tabla.setColumnWidth(4, 150)
         self.tabla.setColumnWidth(5, 150)
-        self.tabla.setColumnWidth(6, 150)
-        self.tabla.setColumnWidth(7, 150)
-        self.tabla.setColumnWidth(8, 150)
-        self.tabla.setColumnWidth(9, 150)
 
         self.tabla.setHorizontalHeaderLabels(['Nombre',
-                                              'Usuario',
-                                              'Password',
+                                              'Apellido',
                                               'Documento',
-                                              'Correo',
-                                              'Contacto',
-                                              'Direccion',
+                                              'Fecha de Nacimiento',
                                               'Genero',
-                                              'Cargo'])
+                                              'Grado'])
 
         self.tabla.setRowCount(self.numeroUsuarios)
 
         for u in self.usuarios:
-            self.tabla.setItem(self.contador,0, QTableWidgetItem(u.nombreCompleto))
-            self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.usuario))
-            self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.password1))
-            self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.documento))
-            self.tabla.setItem(self.contador, 4, QTableWidgetItem(u.correo))
-            self.tabla.setItem(self.contador, 5, QTableWidgetItem(u.contacto))
-            self.tabla.setItem(self.contador, 6, QTableWidgetItem(u.direccion))
-            self.tabla.setItem(self.contador, 7, QTableWidgetItem(u.genero))
-            self.tabla.setItem(self.contador, 8, QTableWidgetItem(u.cargo))
+            self.tabla.setItem(self.contador,0, QTableWidgetItem(u.nombre))
+            self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.apellido))
+            self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.documento))
+            self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.fnacimiento))
+            self.tabla.setItem(self.contador, 4, QTableWidgetItem(u.Genero))
+            self.tabla.setItem(self.contador, 5, QTableWidgetItem(u.grado))
             self.contador += 1
 
         self.scrollArea.setWidget(self.tabla)
@@ -175,17 +161,13 @@ class Info_padre3(QMainWindow):
         self.fondo.setLayout(self.vertical)
 
 
-
     def metodo_botonVolver(self):
         self.hide()
         self.ventanaAnterior.show()
 
 
-
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    infopadre3 = Info_padre3()
+    infopadre3 = Info_alumno3()
     infopadre3.show()
     sys.exit(app.exec_())

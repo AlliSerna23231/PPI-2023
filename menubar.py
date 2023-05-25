@@ -9,6 +9,7 @@ from actualizacion import VentanaActualizacion
 from registro import VentanaRegistro
 from campovaldes import VentanaCampo
 from datacomunnity import VentanaDataComunnity
+from iniciar import Inicar
 
 class Ventana(QMainWindow):
     def __init__(self):
@@ -124,20 +125,25 @@ class Ventana(QMainWindow):
         # boton de campo valdes
         boton = QPushButton(self)
         boton.setGeometry(self.ancho - 50, 40, 50, 50)
-        boton_size = boton.size()
-        # boton.setIconSize(boton_size)
+        boton.setStyleSheet("color: #215636;  padding-bottom: 12px;")
         boton.setIcon(QIcon("imagenes/institucion.jpeg"))
+        boton.setIconSize(boton.size())  # Establecer el tamaño del icono igual al tamaño del botón
         boton.clicked.connect(self.boton_clickeado)
-        boton.setStyleSheet("border: 20px solid black;")
 
-        # boton de data comunity
+
         botonData = QPushButton(self)
-        botonData.setGeometry(self.ancho - 50, 98, 50, 50)  # posición y tamaño del botón
-        botonData_size = botonData.size()
-        # botonData.setIconSize(botonData_size)
+        botonData.setGeometry(self.ancho - 50, 98, 50, 50)
         botonData.setIcon(QIcon("imagenes/datacomunnity.jpg"))
+        botonData.setIconSize(botonData.size())  # Establecer el tamaño del icono igual al tamaño del botón
         botonData.clicked.connect(self.boton_clickeadoData)
-        botonData.setStyleSheet("border: 20px solid black;")
+        botonData.setStyleSheet("color: #215636;  padding-bottom: 10px;")
+
+        botoncerrar = QPushButton(self)
+        botoncerrar.setGeometry(self.ancho - 50, 155, 50, 50)
+        botoncerrar.setIcon(QIcon("imagenes/x.webp"))
+        botoncerrar.setIconSize(botoncerrar.size())  # Establecer el tamaño del icono igual al tamaño del botón
+        botoncerrar.clicked.connect(self.boton_clickeadoCerrar)
+
 
         self.fondo.setFixedSize(self.imagenFondo.width(), self.imagenFondo.height())
 
@@ -150,6 +156,9 @@ class Ventana(QMainWindow):
         self.hide()
         self.datacomunnity = VentanaDataComunnity(self)
         self.datacomunnity.show()
+
+    def boton_clickeadoCerrar(self):
+        sys.exit()
 
     def menu_contacto_datos(self):
         self.hide()
